@@ -1,0 +1,64 @@
+let dadosOriginais = [];
+
+async function carregarDados() {
+    const resposta = await fetch("back/listar.php");
+
+    dadosOriginais = await resposta.json();
+
+    mostrarCards(dadosOriginais);
+}
+
+function mostrarCards(listaDeDados){
+
+    const container = document.querySelector(".containerCards");
+    container.innerHTML = "";
+
+    if(listaDeDados.length === 0){
+        container.innerHTML = "<p> Nenhum registro encontrado </P>";
+        return;
+    }
+
+    listaDeDados.forEach((item)=>{
+        
+        const card = document.createElement("div");
+        card.className = "card";
+
+        const titulo = document.createElement("h3");
+        titulo.textContent = item.nome;
+
+         const texto = document.createElement("p");
+        texto.textContent = item.email;
+
+        const divBotoes = document.createElement("div");
+        divBotoes.className = "btn-acoes";
+
+        const btnAtualizar = document.createElement("button");
+        btnAtualizar.textContent = "Atualizar";
+
+        btnAtualizar.addEventListener("click", function(){
+            const url = `front/atualizar.html?id=${item.id}&nome=${encodeURIcomponent(item.nome)}&email=${encodeURIcomponent(item.email)}`
+            window.location.href = url;
+        });
+
+        const btnDeletar = document.createElement("button");
+        btnDeletar.textContent = "Deletar";
+
+        btnDeletar.addEventListener("click", async function(){
+            if(confirm(`Tem certeza que deseja deletar ${item.nome}?`))
+                await fetch(`back/deletar.php?id=${item.id}`);
+            carregarDados();
+        });
+
+        divBotoes.appendChild(btnAtualizar);
+        divBotoes.appendChild(btnDeletar);
+
+        card.appendChild(titulo);
+        card.appendChild(texto);
+
+        card.appendChild(divBotoes);
+
+        container.appendChild(card);
+    });
+}
+
+carregarDados();
