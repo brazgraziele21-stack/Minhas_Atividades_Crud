@@ -1,0 +1,9 @@
+const parametrosDaUrl = new URLSearchParams(window.location.search);
+
+const CampoId = document.getElementById("idAtualizar");
+const CampoNome = document.getElementById("nomeAtualizar");
+const CampoEmail = document.getElementById("emailAtualizar");
+
+CampoId.value = parametrosDaUrl.get("id");
+CampoNome.value = parametrosDaUrl.get("nome");
+CampoEmail.value = parametrosDaUrl.get("email");
